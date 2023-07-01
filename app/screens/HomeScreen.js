@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 
 import Screen from "../components/Screen";
 import Card from "../components/Card";
+import AppText from "../components/AppText";
 
 function HomeScreen(props) {
   return (
@@ -19,6 +20,19 @@ function HomeScreen(props) {
         }}
         title={"Dry Cleaning"}
         subTitle={"Leave Your Dirty Laundry to Us and We'll Make it Spotless!"}
+      />
+      <Card
+        imageUrl={
+          "https://www.starletcleaning.co.uk/wp-content/uploads/25349851_s.jpg"
+        }
+        thumbnailUrl={
+          "https://www.starletcleaning.co.uk/wp-content/uploads/25349851_s.jpg"
+        }
+        onPress={() => {
+          console.log("clicked");
+        }}
+        title={"Ironing"}
+        subTitle={"We press so that you could impress!"}
       />
     </Screen>
   );
