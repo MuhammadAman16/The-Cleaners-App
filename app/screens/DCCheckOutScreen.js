@@ -3,55 +3,25 @@ import { StyleSheet, ScrollView } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
-import {
-  AppForm,
-  AppFormField,
-  AppFormPicker,
-  SubmitButton,
-} from "../components/form/index";
+import { AppForm, AppFormField, SubmitButton } from "../components/form/index";
 import colors from "../config/colors";
-import CategoryPickerItem from "../components/CategoryPickerItem";
 import FormImagePicker from "../components/form/FormImagePicker";
 import AppText from "../components/AppText";
 // import listingsApi from "../api/listings";
-// import UploadScreen from "./UploadScreen";
 
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp = /^\+?[0-9]{11}$/;
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
+  address: Yup.string().required().min(1).label("Address"),
   number_shirts: Yup.number().required().min(0).max(20).label("Shirts"),
   number_pants: Yup.number().required().min(0).max(20).label("Pants"),
-  number_others: Yup.number().required().min(0).max(20).label("Others"),
-  phoneNumber: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+  phone_number: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
   description: Yup.string().label("Description"),
-  category: Yup.object().required().nullable().label("Category"),
   images: Yup.array().min(1, "Please select atleast one image"),
 });
 
-const categories = [
-  {
-    label: "Standard",
-    value: 1,
-    backgroundColor: colors.primary,
-    icon: "table-furniture",
-  },
-  {
-    label: "Express",
-    value: 2,
-    backgroundColor: "#E4572E",
-    icon: "tshirt-crew",
-  },
-
-  {
-    label: "Urgent",
-    value: 6,
-    backgroundColor: colors.secondary,
-    icon: "car",
-  },
-];
-export default function ListingEditScreen() {
+export default function DCCheckOutScreen() {
   // const [location, setLocation] = useState(null);
   // const [errorMsg, setErrorMsg] = useState(null);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -109,11 +79,6 @@ export default function ListingEditScreen() {
   return (
     <Screen style={styles.container}>
       <ScrollView>
-        {/* <UploadScreen
-        onDone={() => setUploadVisible(false)}
-        progress={progess}
-        visible={uploadVisible}
-      /> */}
         <AppForm
           initialValues={{
             title: "",
@@ -129,10 +94,19 @@ export default function ListingEditScreen() {
 
           <FormImagePicker name="images" />
           <AppText style={styles.text}>Name</AppText>
-          <AppFormField maxLength={255} name={""} />
+          <AppFormField maxLength={255} name={"title"} />
 
           <AppText style={styles.text}>Address</AppText>
-          <AppFormField maxLength={255} name={""} numberOfLines={3} />
+          <AppFormField maxLength={255} name={"address"} numberOfLines={3} />
+
+          <AppText style={styles.text}>Contact Number</AppText>
+          <AppFormField
+            maxLength={255}
+            name={"phone_number"}
+            numberOfLines={1}
+            keyboardType={"number-pad"}
+          />
+
           <AppText style={styles.text}>Number of Shirts/Tops x Rs100</AppText>
           <AppFormField
             keyboardType={"number-pad"}

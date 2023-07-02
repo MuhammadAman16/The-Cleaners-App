@@ -1,7 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import colors from "../config/color";
+import colors from "../config/colors";
+import { NavigationContainer } from "@react-navigation/native";
+import DCCheckOutScreen from "../screens/DCCheckOutScreen";
+import HomeScreen from "../screens/HomeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,9 +15,10 @@ const FeedNavigator = () => (
       gestureEnabled: true,
     }}
   >
+    <Stack.Screen name="Home" component={HomeScreen} />
     <Stack.Screen
-      name="ListingDetails"
-      component={ListingDetailsScreen}
+      name="DCCheckOut"
+      component={DCCheckOutScreen}
       options={{ title: "", headerTintColor: colors.primary }}
     />
   </Stack.Navigator>

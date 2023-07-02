@@ -6,6 +6,7 @@ import LogOut from "../screens/LogOut";
 import colors from "../config/colors";
 
 import { Text, TouchableOpacity } from "react-native";
+import FeedNavigator from "./FeedNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ export default function AppNavigator() {
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={FeedNavigator}
         options={{
           tabBarInactiveTintColor: colors.medium,
           tabBarActiveTintColor: colors.primary,

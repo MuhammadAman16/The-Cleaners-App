@@ -6,12 +6,12 @@ import HomeScreen from "./app/screens/HomeScreen";
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import ListingEditScreen from "./app/screens/DC_CheckOut";
+import ListingEditScreen from "./app/screens/DCCheckOutScreen";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <ListingEditScreen />
+      <AppNavigator />
     </NavigationContainer>
   );
 }

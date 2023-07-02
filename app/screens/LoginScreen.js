@@ -12,7 +12,6 @@ import {
 // import useAuth from "../auth/useAuth";
 import ForgotPasswordLink from "../components/ForgotPasswordLink";
 import MemberLink from "../components/MemberLink";
-// import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import RegisterScreen from "./RegisterScreen";
 import routes from "../navigation/routes";
