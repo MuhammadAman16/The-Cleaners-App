@@ -7,18 +7,16 @@ import { AppForm, AppFormField, SubmitButton } from "../components/form/index";
 import colors from "../config/colors";
 import FormImagePicker from "../components/form/FormImagePicker";
 import AppText from "../components/AppText";
-// import listingsApi from "../api/listings";
+import ordersApi from "../api/orders";
 
 const phoneRegExp = /^\+?[0-9]{11}$/;
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
   address: Yup.string().required().min(1).label("Address"),
-  number_shirts: Yup.number().required().min(0).max(20).label("Shirts"),
-  number_pants: Yup.number().required().min(0).max(20).label("Pants"),
   phone_number: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
   description: Yup.string().label("Description"),
-  images: Yup.array().min(1, "Please select atleast one image"),
+  // images: Yup.array().min(1, "Please select atleast one image"),
 });
 
 export default function DCCheckOutScreen() {
@@ -27,22 +25,19 @@ export default function DCCheckOutScreen() {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progess, setProgess] = useState(0);
 
-  // const handleSubmit = async (listing, { resetForm }) => {
-  //   setProgess(50);
-  //   setUploadVisible(true);
-  //   const result = await listingsApi.addListing(
-  //     { ...listing, location },
-  //     (progress) => setProgess(progress)
-  //   );
-  const handleSubmit = () => {
-    console.log("listing screen clg");
+  const handleSubmit = async (listing, { resetForm }) => {
+    setProgess(50);
+    setUploadVisible(true);
+    const result = await ordersApi.addListing({ ...listing }, (progress) =>
+      setProgess(progress)
+    );
+
+    if (!result.ok) {
+      setUploadVisible(false);
+      return alert("Could not save the listing");
+    }
+    resetForm();
   };
-  //   if (!result.ok) {
-  //     setUploadVisible(false);
-  //     return alert("Could not save the listing");
-  //   }
-  //   resetForm();
-  // };
 
   const [deliveryDate, setDeliveryDate] = useState("");
 
@@ -67,7 +62,6 @@ export default function DCCheckOutScreen() {
   const [shirts, setShirts] = useState("");
   const [pants, setPants] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
-  const [deliveryPrice, setDeliveryPrice] = useState("");
 
   useEffect(() => {
     if (shirts !== "" && pants !== "") {
@@ -81,20 +75,20 @@ export default function DCCheckOutScreen() {
       <ScrollView>
         <AppForm
           initialValues={{
-            title: "",
-            price: "",
+            // images: [],
+            name: "",
+            address: "",
+            phone_number: "",
             description: "",
-            category: null,
-            images: [],
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          <AppText style={styles.text}>Insert Images of Your Clothing</AppText>
+          {/* <AppText style={styles.text}>Insert Images of Your Clothing</AppText>
 
-          <FormImagePicker name="images" />
+          <FormImagePicker name="images" /> */}
           <AppText style={styles.text}>Name</AppText>
-          <AppFormField maxLength={255} name={"title"} />
+          <AppFormField maxLength={255} name={"name"} />
 
           <AppText style={styles.text}>Address</AppText>
           <AppFormField maxLength={255} name={"address"} numberOfLines={3} />
@@ -111,22 +105,24 @@ export default function DCCheckOutScreen() {
           <AppFormField
             keyboardType={"number-pad"}
             maxLength={8}
-            name={"Shirts"}
+            name={"shirts"}
             width={120}
             onChangeText={(value) => {
               setShirts(value);
             }}
+            value={shirts}
           />
 
           <AppText style={styles.text}>Number of Pants/Bottoms x Rs120</AppText>
           <AppFormField
             keyboardType={"number-pad"}
             maxLength={8}
-            name={"Pants"}
+            name={"pants"}
             width={120}
             onChangeText={(value) => {
               setPants(value);
             }}
+            value={pants}
           />
 
           <AppText style={styles.text}>Any Special Instructions</AppText>

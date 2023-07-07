@@ -14,10 +14,8 @@ import AppText from "../components/AppText";
 import colors from "../config/colors";
 
 // import AuthContext from "../auth/context";
-// import userAPI from "../api/user";
-// import useApi from "../../hooks/useApi";
-
-// i
+import userAPI from "../api/user";
+import useApi from "../../hooks/useApi";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -30,12 +28,13 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function SettingsScreen(props) {
-  // const getUserAPI = useApi(userAPI.getUser);
+  const getUserAPI = useApi(userAPI.getUser);
   // const { user } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   getUserAPI.request(user.userId);
-  // }, []);
+  useEffect(() => {
+    getUserAPI;
+  }, []);
+  console.log(getUserAPI.data);
 
   //   const registerApi = useApi(usersApi.register);
   //   const loginApi = useApi(authApi.login);
@@ -82,7 +81,7 @@ export default function SettingsScreen(props) {
             <AppFormField
               autoCorrect={false}
               name={"name"}
-              value={getUserAPI.data.name}
+              value={getUserAPI.data.username}
             />
           </View>
 

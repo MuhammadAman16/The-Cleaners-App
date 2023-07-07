@@ -8,13 +8,12 @@ import {
   ErrorMessage,
   SubmitButton,
 } from "../components/form/index";
-// import authAPI from "../api/auth";
-// import useAuth from "../auth/useAuth";
+import authAPI from "../api/auth";
+import useAuth from "../auth/useAuth";
 import ForgotPasswordLink from "../components/ForgotPasswordLink";
 import MemberLink from "../components/MemberLink";
-import Screen from "../components/Screen";
-import RegisterScreen from "./RegisterScreen";
 import routes from "../navigation/routes";
+import Screen from "../components/Screen";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -22,20 +21,19 @@ const validationSchema = Yup.object().shape({
 });
 
 function LoginScreen({ navigation }) {
-  // const auth = useAuth();
+  const auth = useAuth();
 
-  // const [loginFailed, setloginFailed] = useState(false);
+  const [loginFailed, setloginFailed] = useState(false);
 
-  // const handleSubmit = async ({ email, password }) => {
-  //   const result = await authAPI.login(email, password);
-  //   if (!result.ok) {
-  //     return setloginFailed(true);
-  //   }
-  //   auth.logIn(result.data);
-  //   setloginFailed(false);
-  // };
-  const handleSubmit = () => {
-    console.log("submitted");
+  const handleSubmit = async ({ email, password }) => {
+    const result = await authAPI.login(email, password);
+    console.log(result.data);
+
+    if (!result.ok) {
+      return setloginFailed(true);
+    }
+    auth.logIn(result.data);
+    setloginFailed(false);
   };
 
   return (
@@ -49,8 +47,7 @@ function LoginScreen({ navigation }) {
       >
         <ErrorMessage
           error={"Invalid Email or Password"}
-          // visible={loginFailed}
-          visible={true}
+          visible={loginFailed}
         />
         <AppFormField
           name={"email"}
@@ -85,7 +82,7 @@ function LoginScreen({ navigation }) {
   );
 }
 const styles = StyleSheet.create({
-  container: { padding: 25 },
+  container: { padding: 15 },
 
   logo: {
     width: 200,
