@@ -16,7 +16,6 @@ const useAuth = () => {
     } catch (error) {
       console.log("Error decoding token:", error);
     }
-    console.log("loggin in");
   };
 
   const logOut = () => {

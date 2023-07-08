@@ -13,9 +13,12 @@ import {
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 
-// import AuthContext from "../auth/context";
+import AuthContext from "../auth/context";
+import authApi from "../api/auth";
 import userAPI from "../api/user";
+import useAuth from "../auth/useAuth";
 import useApi from "../../hooks/useApi";
+import usersAPI from "../api/users";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -29,37 +32,36 @@ const validationSchema = Yup.object().shape({
 
 export default function SettingsScreen(props) {
   const getUserAPI = useApi(userAPI.getUser);
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    getUserAPI;
+    getUserAPI.request(user.id);
   }, []);
-  console.log(getUserAPI.data);
 
-  //   const registerApi = useApi(usersApi.register);
-  //   const loginApi = useApi(authApi.login);
+  const registerApi = useApi(usersAPI.register);
+  const loginApi = useApi(authApi.login);
 
-  //   const auth = useAuth();
-  //   const [error, setError] = useState();
+  const auth = useAuth();
+  const [error, setError] = useState();
 
-  //   const handleSubmit = async (userInfo) => {
-  //     const result = await registerApi.request(userInfo);
+  const handleSubmit = async (userInfo) => {
+    const result = await registerApi.request(userInfo);
 
-  //     if (!result.ok) {
-  //       if (result.data) setError(result.data.error);
-  //       else {
-  //         setError("An unexpected error occured");
-  //         console.log(result);
-  //       }
-  //       return;
-  //     }
-  //     //renaming data to authToken
-  //     const { data: authToken } = await loginApi.request(
-  //       userInfo.email,
-  //       userInfo.password
-  //     );
-  //     auth.logIn(authToken);
-  //   };
+    if (!result.ok) {
+      if (result.data) setError(result.data.error);
+      else {
+        setError("An unexpected error occured");
+        console.log(result);
+      }
+      return;
+    }
+    //renaming data to authToken
+    const { data: authToken } = await loginApi.request(
+      userInfo.email,
+      userInfo.password
+    );
+    auth.logIn(authToken);
+  };
   return (
     <>
       {/* <ActivityIndicator visible={registerApi.loading || loginApi.loading} /> */}
@@ -81,7 +83,7 @@ export default function SettingsScreen(props) {
             <AppFormField
               autoCorrect={false}
               name={"name"}
-              value={getUserAPI.data.username}
+              value={getUserAPI.data[0].username}
             />
           </View>
 
@@ -92,7 +94,7 @@ export default function SettingsScreen(props) {
               autoCorrect={false}
               name={"email"}
               textContentType="emailAddress"
-              value={getUserAPI.data.email}
+              value={getUserAPI.data[0].email}
             />
           </View>
 
@@ -101,7 +103,7 @@ export default function SettingsScreen(props) {
             <AppFormField
               autoCorrect={false}
               name={"password"}
-              value={getUserAPI.data.password}
+              value={getUserAPI.data[0].password}
               secureTextEntry
               textContentType="password"
             />
@@ -114,7 +116,7 @@ export default function SettingsScreen(props) {
               name={"confirm_password"}
               secureTextEntry
               textContentType="password"
-              value={getUserAPI.data.password}
+              value={getUserAPI.data[0].password}
             />
           </View>
           <SubmitButton title={"SAVE"} />

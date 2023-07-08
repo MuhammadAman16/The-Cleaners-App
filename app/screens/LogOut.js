@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 
-// import useAuth from "../auth/useAuth";
+import useAuth from "../auth/useAuth";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 
 function LogOut(props) {
-  // const { logOut } = useAuth();
+  const { logOut } = useAuth();
 
   return (
     <Screen style={styles.container}>
@@ -16,7 +16,7 @@ function LogOut(props) {
       <AppButton
         title={"YES"}
         onPress={() => {
-          console.log("logout pressed");
+          logOut();
         }}
       />
     </Screen>

@@ -14,6 +14,7 @@ import ForgotPasswordLink from "../components/ForgotPasswordLink";
 import MemberLink from "../components/MemberLink";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
+import jwtDecode from "jwt-decode";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -27,12 +28,11 @@ function LoginScreen({ navigation }) {
 
   const handleSubmit = async ({ email, password }) => {
     const result = await authAPI.login(email, password);
-    console.log(result.data);
 
     if (!result.ok) {
       return setloginFailed(true);
     }
-    auth.logIn(result.data);
+    auth.logIn(result.data.authToken);
     setloginFailed(false);
   };
 
