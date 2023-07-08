@@ -67,10 +67,7 @@ function LoginScreen({ navigation }) {
         />
         <SubmitButton title={"LOGIN"} />
       </AppForm>
-      <ForgotPasswordLink
-        link={"Forgot Password?"}
-        onClick={() => console.log("Forgot password")}
-      />
+
       <MemberLink
         link={"Register"}
         text={"Not a member?"}

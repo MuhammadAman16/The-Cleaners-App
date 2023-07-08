@@ -1,40 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/form/index";
 import colors from "../config/colors";
-import FormImagePicker from "../components/form/FormImagePicker";
 import AppText from "../components/AppText";
 import ordersApi from "../api/orders";
+
+import AuthContext from "../auth/context";
 
 const phoneRegExp = /^\+?[0-9]{11}$/;
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string().required().min(1).label("Title"),
+  name: Yup.string().required().min(1).label("Name"),
   address: Yup.string().required().min(1).label("Address"),
-  phone_number: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+  phone_number: Yup.string()
+    .required()
+    .matches(phoneRegExp, "Phone number is not valid"),
   description: Yup.string().label("Description"),
-  // images: Yup.array().min(1, "Please select atleast one image"),
 });
 
 export default function DCCheckOutScreen() {
-  // const [location, setLocation] = useState(null);
-  // const [errorMsg, setErrorMsg] = useState(null);
+  const { user } = useContext(AuthContext);
+
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progess, setProgess] = useState(0);
 
   const handleSubmit = async (listing, { resetForm }) => {
-    setProgess(50);
-    setUploadVisible(true);
-    const result = await ordersApi.addListing({ ...listing }, (progress) =>
-      setProgess(progress)
-    );
+    const result = await ordersApi.addOrder({
+      userId: user.id,
+      ...listing,
+    });
 
     if (!result.ok) {
-      setUploadVisible(false);
-      return alert("Could not save the listing");
+      console.log(result);
+      return alert("Failed to place order");
     }
     resetForm();
   };
@@ -54,39 +55,21 @@ export default function DCCheckOutScreen() {
     setDeliveryDate(formattedDate);
   }, []);
 
-  const calculateTotalPrice = (shirts, pants) => {
-    const shirtPrice = 100; // Price per shirt
-    const pantPrice = 120; // Price per pant
-    return shirts * shirtPrice + pants * pantPrice;
-  };
-  const [shirts, setShirts] = useState("");
-  const [pants, setPants] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    if (shirts !== "" && pants !== "") {
-      const totalPrice = calculateTotalPrice(Number(shirts), Number(pants));
-      setTotalPrice(totalPrice);
-    }
-  }, [shirts, pants]);
-
   return (
     <Screen style={styles.container}>
       <ScrollView>
         <AppForm
           initialValues={{
-            // images: [],
             name: "",
             address: "",
             phone_number: "",
+            shirts: 0,
+            pants: 0,
             description: "",
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {/* <AppText style={styles.text}>Insert Images of Your Clothing</AppText>
-
-          <FormImagePicker name="images" /> */}
           <AppText style={styles.text}>Name</AppText>
           <AppFormField maxLength={255} name={"name"} />
 
@@ -107,10 +90,6 @@ export default function DCCheckOutScreen() {
             maxLength={8}
             name={"shirts"}
             width={120}
-            onChangeText={(value) => {
-              setShirts(value);
-            }}
-            value={shirts}
           />
 
           <AppText style={styles.text}>Number of Pants/Bottoms x Rs120</AppText>
@@ -119,10 +98,6 @@ export default function DCCheckOutScreen() {
             maxLength={8}
             name={"pants"}
             width={120}
-            onChangeText={(value) => {
-              setPants(value);
-            }}
-            value={pants}
           />
 
           <AppText style={styles.text}>Any Special Instructions</AppText>
@@ -132,15 +107,10 @@ export default function DCCheckOutScreen() {
             name={"description"}
             numberOfLines={3}
           />
-          <AppText style={styles.checkOutText}>Sum : Rs {totalPrice}</AppText>
           <AppText style={styles.checkOutText}>
             PickUp + Delivery Price : 250{" "}
           </AppText>
-          <AppText style={styles.checkText}>
-            Total Sum : Rs {totalPrice + 250}
-          </AppText>
           <AppText style={styles.expDate}>
-            {" "}
             Expected Delivery Date: {deliveryDate}
           </AppText>
           <SubmitButton title={"Post"} />

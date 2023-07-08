@@ -83,7 +83,7 @@ export default function SettingsScreen(props) {
             <AppFormField
               autoCorrect={false}
               name={"name"}
-              value={getUserAPI.data[0].username}
+              value={user.username}
             />
           </View>
 
@@ -94,7 +94,7 @@ export default function SettingsScreen(props) {
               autoCorrect={false}
               name={"email"}
               textContentType="emailAddress"
-              value={getUserAPI.data[0].email}
+              value={user.email}
             />
           </View>
 
@@ -103,7 +103,7 @@ export default function SettingsScreen(props) {
             <AppFormField
               autoCorrect={false}
               name={"password"}
-              value={getUserAPI.data[0].password}
+              value={user.password}
               secureTextEntry
               textContentType="password"
             />
@@ -116,7 +116,7 @@ export default function SettingsScreen(props) {
               name={"confirm_password"}
               secureTextEntry
               textContentType="password"
-              value={getUserAPI.data[0].password}
+              value={user.password}
             />
           </View>
           <SubmitButton title={"SAVE"} />

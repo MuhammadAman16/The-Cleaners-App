@@ -8,17 +8,15 @@ import {
   ErrorMessage,
   SubmitButton,
 } from "../components/form/index";
-// import ActivityIndicator from "../components/ActivityIndicator";
 import MemberLink from "../components/MemberLink";
-// import routes from "../navigation/routes";
+import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import LoginScreen from "./LoginScreen";
-import routes from "../navigation/routes";
 
-// import authAPI from "../api/auth";
-// import usersAPI from "../api/users";
-// import useApi from "../../hooks/useApi";
-// import useAuth from "../auth/useAuth";
+import authAPI from "../api/auth";
+import usersAPI from "../api/users";
+import useApi from "../../hooks/useApi";
+import useAuth from "../auth/useAuth";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -27,31 +25,31 @@ const validationSchema = Yup.object().shape({
 });
 
 function RegisterScreen({ navigation }) {
-  // const registerAPI = useApi(usersAPI.register);
-  // const loginAPI = useApi(authAPI.login);
-  // const auth = useAuth();
-  // const [error, setError] = useState();
+  const registerAPI = useApi(usersAPI.register);
+  const loginAPI = useApi(authAPI.login);
+  const auth = useAuth();
+  const [error, setError] = useState();
 
-  // const handleSubmit = async (userInfo) => {
-  //   const result = await registerAPI.request(userInfo);
+  const handleSubmit = async (userInfo) => {
+    const result = await registerAPI.request({ ...userInfo });
+    console.log(result);
+    console.log(userInfo.email);
 
-  //   if (!result.ok) {
-  //     if (result.data) setError(result.data.error);
-  //     else {
-  //       setError("An unexpected error occured");
-  //       console.log(result);
-  //     }
-  //     return;
-  //   }
-  //   //renaming data to authToken
-  //   const { data: authToken } = await loginAPI.request(
-  //     userInfo.email,
-  //     userInfo.password
-  //   );
-  //   auth.logIn(authToken);
-  // };
-  const handleSubmit = () => {
-    console.log("object");
+    // if (!result.ok) {
+    //   if (result.data) setError(result.data.error);
+    //   else {
+    //     setError("An unexpected error occured");
+    //   }
+    //   return;
+    // }
+    console.log("first");
+    //renaming data to authToken
+    const { data: authToken } = await loginAPI.request(
+      userInfo.email,
+      userInfo.password
+    );
+    console.log(authToken);
+    auth.logIn(authToken.authToken);
   };
 
   return (
@@ -59,7 +57,7 @@ function RegisterScreen({ navigation }) {
       {/* <ActivityIndicator visible={registerAPI.loading || loginAPI.loading} /> */}
       <Screen style={styles.container}>
         <Image style={styles.logo} source={require("../../assets/logo.png")} />
-        {/* <ErrorMessage visible={error} error={error} /> */}
+        <ErrorMessage visible={error} error={error} />
         <AppForm
           initialValues={{ name: "", email: "", password: "" }}
           //   handleSubmit

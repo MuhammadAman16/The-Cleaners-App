@@ -2,8 +2,8 @@ import client from "./client";
 
 const endpoint = "/orders";
 
-const addListing = ({
-  images,
+const addOrder = ({
+  userId,
   name,
   address,
   phone_number,
@@ -11,22 +11,20 @@ const addListing = ({
   pants,
   description,
 }) => {
-  const data = new FormData();
-  data.append("images", images);
-  data.append("name", name);
-  data.append("address", address);
-  data.append("phone", phone_number);
-  data.append("shirts", shirts);
-  data.append("pants", pants);
-  data.append("instructions", description);
-  data.append("userid", "1");
-
-  return client.post(endpoint, data);
+  return client.post(endpoint, {
+    userid: userId,
+    name,
+    address,
+    phone: phone_number,
+    shirts,
+    pants,
+    instructions: description,
+  });
 };
 
 const deleteListings = (index) => client.delete(index);
 
 export default {
-  addListing,
+  addOrder: addOrder,
   deleteListings,
 };
