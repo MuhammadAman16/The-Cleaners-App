@@ -31,24 +31,29 @@ function RegisterScreen({ navigation }) {
   const [error, setError] = useState();
 
   const handleSubmit = async (userInfo) => {
-    const result = await registerAPI.request({ ...userInfo });
-    console.log(result);
-    console.log(userInfo.email);
+    try {
+      const result = await registerAPI.request({ ...userInfo });
 
-    // if (!result.ok) {
-    //   if (result.data) setError(result.data.error);
-    //   else {
-    //     setError("An unexpected error occured");
-    //   }
-    //   return;
-    // }
-    console.log("first");
-    //renaming data to authToken
+      if (!result.data) {
+        setError("An unexpected error occurred");
+        return;
+      }
+
+      if (!result.data.success) {
+        setError(result.data.error);
+        return;
+      }
+      console.log("Registration successful");
+    } catch (error) {
+      console.error("Error registering new user:", error);
+      // setError("An unexpected error occurred");
+    }
+
+    // renaming data to authToken
     const { data: authToken } = await loginAPI.request(
       userInfo.email,
       userInfo.password
     );
-    console.log(authToken);
     auth.logIn(authToken.authToken);
   };
 
