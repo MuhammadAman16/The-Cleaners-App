@@ -11,13 +11,25 @@ import receiptAPI from "../api/receipt";
 
 export default function ReceiptScreen(props) {
   const getOrderAPI = useApi(receiptAPI.getReceipt);
-  const { orderId } = useContext(OrderContext);
+  const { order } = useContext(OrderContext);
+  console.log(order);
 
   useEffect(() => {
-    getOrderAPI.request(orderId);
-  }, []);
+    if (order) {
+      fetchReceiptData();
+    }
+  }, [order]); // Add 'order' as a dependency
 
-  console.log(getOrderAPI.data.order);
+  const fetchReceiptData = async () => {
+    try {
+      await getOrderAPI.request(order);
+      console.log(getOrderAPI.data?.order);
+    } catch (error) {
+      console.log("Error loading receipt:", error);
+    }
+  };
+
+  // console.log(getOrderAPI.data.order);
   // const { error, loading } = getOrderAPI;
   // const order = getOrderAPI.data.order[0];
 

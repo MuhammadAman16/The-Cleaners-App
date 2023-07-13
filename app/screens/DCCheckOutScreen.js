@@ -43,8 +43,8 @@ export default function DCCheckOutScreen({ navigation }) {
       console.log(result);
       return alert("Failed to place order");
     }
-
-    setOrder(result.data);
+    setOrder(result.data.orderId);
+    console.log(result.data.orderId);
     navigation.navigate(routes.RECEIPT);
 
     resetForm();
