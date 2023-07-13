@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import * as Yup from "yup";
 
+import ActivityIndicator from "../components/ActivityIndicator";
 import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/form/index";
 import colors from "../config/colors";
@@ -9,6 +10,8 @@ import AppText from "../components/AppText";
 import ordersApi from "../api/orders";
 
 import AuthContext from "../auth/context";
+import routes from "../navigation/routes";
+import OrderContext from "../navigation/OrderContext";
 
 const phoneRegExp = /^\+?[0-9]{11}$/;
 
@@ -19,24 +22,31 @@ const validationSchema = Yup.object().shape({
     .required()
     .matches(phoneRegExp, "Phone number is not valid"),
   description: Yup.string().label("Description"),
+  shirts: Yup.number().integer().min(0).label("Number of Shirts"),
+  pants: Yup.number().integer().min(0).label("Number of Pants"),
 });
 
-export default function DCCheckOutScreen() {
+export default function DCCheckOutScreen({ navigation }) {
   const { user } = useContext(AuthContext);
-
-  const [uploadVisible, setUploadVisible] = useState(false);
-  const [progess, setProgess] = useState(0);
+  const { order, setOrder } = useContext(OrderContext);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (listing, { resetForm }) => {
+    setLoading(true);
     const result = await ordersApi.addOrder({
       userId: user.id,
       ...listing,
     });
+    setLoading(false);
 
     if (!result.ok) {
       console.log(result);
       return alert("Failed to place order");
     }
+
+    setOrder(result.data);
+    navigation.navigate(routes.RECEIPT);
+
     resetForm();
   };
 
@@ -57,6 +67,7 @@ export default function DCCheckOutScreen() {
 
   return (
     <Screen style={styles.container}>
+      <ActivityIndicator visible={loading} />
       <ScrollView>
         <AppForm
           initialValues={{
