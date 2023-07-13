@@ -5,10 +5,11 @@ import * as Yup from "yup";
 import ActivityIndicator from "../components/ActivityIndicator";
 import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/form/index";
-import colors from "../config/colors";
 import AppText from "../components/AppText";
-import ordersApi from "../api/orders";
 
+import colors from "../config/colors";
+
+import ordersApi from "../api/orders";
 import AuthContext from "../auth/context";
 import routes from "../navigation/routes";
 import OrderContext from "../navigation/OrderContext";
@@ -43,6 +44,7 @@ export default function DCCheckOutScreen({ navigation }) {
       console.log(result);
       return alert("Failed to place order");
     }
+
     setOrder(result.data.orderId);
     console.log(result.data.orderId);
     navigation.navigate(routes.RECEIPT);

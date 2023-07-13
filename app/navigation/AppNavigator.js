@@ -1,18 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import LogOut from "../screens/LogOut";
 import colors from "../config/colors";
 
-import { Text, TouchableOpacity } from "react-native";
 import FeedNavigator from "./FeedNavigator";
 
 const Tab = createBottomTabNavigator();
-
-const handleLogout = () => {
-  console.log("logout");
-};
 
 export default function AppNavigator() {
   return (

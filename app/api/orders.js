@@ -21,10 +21,6 @@ const addOrder = ({
     instructions: description,
   });
 };
-
-const deleteListings = (index) => client.delete(index);
-
 export default {
   addOrder: addOrder,
-  deleteListings,
 };
